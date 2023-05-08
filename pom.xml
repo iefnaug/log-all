@@ -12,6 +12,7 @@
         <module>jul</module>
         <module>log4j</module>
         <module>jcl</module>
+        <module>slf4j</module>
     </modules>
 
     <properties>
