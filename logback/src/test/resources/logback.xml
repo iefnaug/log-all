@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <property name="pattern" value="[%thread] [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c %M %L %m%n"/>
+    <property name="dir" value="/Users/renascence/Idea2023/log-all/logback/src/test"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+<!--    <appender name="file" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>${dir}/file.log</file>-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>${pattern}</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    <appender name="file_html" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>${dir}/file.html</file>-->
+<!--        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">-->
+<!--            <layout class="ch.qos.logback.classic.html.HTMLLayout">-->
+<!--                <pattern>%thread%-5level%d{yyyy-MM-dd HH:mm:ss.SSS}%c%M%L%m%n</pattern>-->
+<!--            </layout>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+    <appender name="rolling_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${dir}/info.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <!--文件拆分规则-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+<!--            <fileNamePattern>${dir}/rolling_file.%d{yyyy-MM-dd-HH-mm-ss}.log%i.gz</fileNamePattern>-->
+            <fileNamePattern>${dir}/info.%d{yyyy-MM-dd}.log%i</fileNamePattern>
+            <maxFileSize>50KB</maxFileSize>
+        </rollingPolicy>
+        <!--过滤器-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="rolling_file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${dir}/error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <!--文件拆分规则-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--            <fileNamePattern>${dir}/rolling_file.%d{yyyy-MM-dd-HH-mm-ss}.log%i.gz</fileNamePattern>-->
+            <fileNamePattern>${dir}/error.%d{yyyy-MM-dd}.log%i</fileNamePattern>
+            <maxFileSize>50KB</maxFileSize>
+        </rollingPolicy>
+        <!--过滤器-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--异步日志-->
+    <appender name="async_error" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="rolling_file_error"/>
+    </appender>
+
+    <appender name="async_info" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="rolling_file"/>
+    </appender>
+
+
+    <!--root logger-->
+    <root level="ALL">
+<!--        <appender-ref ref="console"/>-->
+<!--        <appender-ref ref="file"/>-->
+<!--        <appender-ref ref="file_html"/>-->
+        <appender-ref ref="async_error"/>
+        <appender-ref ref="async_info"/>
+    </root>
+
+
+    <!--自定义logger-->
+    <logger name="com.logback" level="info" additivity="false">
+<!--        <appender-ref ref="console"/>-->
+    </logger>
+
+</configuration>

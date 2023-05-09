@@ -13,6 +13,7 @@
         <module>log4j</module>
         <module>jcl</module>
         <module>slf4j</module>
+        <module>logback</module>
     </modules>
 
     <properties>
